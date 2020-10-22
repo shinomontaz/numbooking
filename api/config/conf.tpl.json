@@ -1,0 +1,12 @@
+{
+    "TestFlag":true,
+    "ListenPort":3001,
+    "CHUrl": "http://localhost:8123/?user=default&password=qwe&database=test",
+    "FlushInterval": 1000,
+	"FlushCount": 1000,
+    "DbHost": "localhost",
+    "DbPort": 9000,
+    "DbName": "test",
+    "DbUser": "default",
+    "DbPass": "qwe",
+}

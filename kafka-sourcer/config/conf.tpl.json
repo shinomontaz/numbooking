@@ -1,0 +1,17 @@
+{
+    "TestFlag":true,
+    "ListenPort":3002,
+    "DbHost": "localhost",
+    "DbPort": 9000,
+    "DbName": "test",
+    "DbUser": "default",
+    "DbPass": "qwe",
+    "kfConfig": {
+        "Brokers": [
+            "node1.kafka.stest.billing.ru.mgo.su:9092",
+            "node2.kafka.stest.billing.ru.mgo.su:9092",
+            "node3.kafka.stest.billing.ru.mgo.su:9092"
+        ],
+        "Topic": "drybakov"
+    }
+}
