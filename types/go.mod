@@ -1,3 +1,3 @@
-module numbooking/types
+module types
 
 go 1.14
