@@ -23,7 +23,7 @@ type Config struct {
 	DbPass     string `env:"CHUPD_DBPASS"`
 	DbPort     int    `env:"CHUPD_DBPORT"`
 
-	kfConfig kafka.WriterConfig `json:"kfConfig"`
+	KfConfig kafka.WriterConfig `json:"KfConfig"`
 }
 
 type Env struct {
@@ -34,8 +34,9 @@ type Env struct {
 }
 
 func NewEnv(path string) *Env {
+	viper.SetConfigType("json")
 	viper.SetConfigName(path)
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("config")
 
 	if err := viper.ReadInConfig(); err != nil {
 		checkErr(err)
@@ -77,7 +78,7 @@ func initDbDsn(cfg *Config) string {
 }
 
 func (e *Env) InitKafka() {
-	e.Kafka = kafka.NewWriter(e.Config.kfConfig)
+	e.Kafka = kafka.NewWriter(e.Config.KfConfig)
 }
 
 func checkErr(err error) {
