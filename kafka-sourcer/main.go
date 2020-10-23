@@ -11,7 +11,7 @@ import (
 
 	"github.com/segmentio/kafka-go"
 
-	"github.com/shinomontaz/numbooking/types"
+	types "github.com/shinomontaz/numbooking_types"
 )
 
 var env *config.Env
