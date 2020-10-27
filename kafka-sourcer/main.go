@@ -71,6 +71,7 @@ func main() {
 
 	close(chOk)
 	close(chMessages)
+	env.Kafka.Close()
 }
 
 func getCreatedNums(chMessages chan<- []byte, chOk chan<- struct{}) {
