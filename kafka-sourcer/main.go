@@ -17,7 +17,7 @@ import (
 )
 
 var env *config.Env
-var errors chan error
+var chErrors chan error
 
 func init() {
 	env = config.NewEnv("./config")
@@ -25,12 +25,18 @@ func init() {
 	env.InitLog()
 	//	env.InitDb()
 
-	errors = make(chan error, 1000)
+	chErrors = make(chan error, 1000)
 
 	rand.Seed(time.Now().UnixNano())
 }
 
 func main() {
+
+	go func() {
+		for err := range chErrors {
+			fmt.Println("Error", err)
+		}
+	}()
 
 	chMessages := make(chan []byte, 1000)
 	chOk := make(chan struct{})
@@ -41,7 +47,7 @@ func main() {
 	// кладем в кафку
 	// завершаемся
 
-	var wg sync.WaitGroup
+	var wg, wg2 sync.WaitGroup
 	wg.Add(2)
 	go getCreatedNums(chMessages, chOk)
 	go getDeletedNums(chMessages, chOk)
@@ -53,24 +59,28 @@ func main() {
 		}
 	}()
 
+	wg2.Add(1)
 	go func() {
 		for mess := range chMessages { // it is safe to do that due to Writer has internal bacth queue
+			fmt.Println(string(mess))
 			err := env.Kafka.WriteMessages(
 				context.Background(),
 				kafka.Message{Value: mess},
 			)
 			if err != nil {
-				errors <- err
+				chErrors <- err
 			}
 		}
-
-		return
+		wg2.Done()
 	}()
 
 	wg.Wait()
 
 	close(chOk)
 	close(chMessages)
+
+	wg2.Wait()
+
 	env.Kafka.Close()
 }
 
@@ -104,7 +114,6 @@ func getDeletedNums(chMessages chan<- []byte, chOk chan<- struct{}) {
 	var rndID int64
 	var rndDelFlag int
 	for i := 0; i < 100; i++ {
-		fmt.Println(i)
 		rndID = rand.Int63()
 		rndDelFlag = rand.Intn(2)
 		var delFlag bool

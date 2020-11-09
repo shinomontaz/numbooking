@@ -22,7 +22,7 @@ func init() {
 	env = config.NewEnv("./config")
 	env.InitKafka()
 	env.InitLog()
-	env.InitDb()
+	//	env.InitDb()
 
 	chErrors = make(chan error, 1000)
 
